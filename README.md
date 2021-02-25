@@ -55,6 +55,31 @@ async def main() -> None:
 
 asyncio.get_event_loop().run_until_complete(main())
 ```
+
+## API Methods
+
+These are coroutines and need to be `await`ed – see `example.py` for examples.
+
+* `login`: Login method that authenticates user and also updates device information
+* `authenticate`: Authenticate (or re-authenticate) to Snoo. Call this to
+  re-authenticate immediately after changing username and/or password otherwise
+  new username/password will only be used when token has to be refreshed.
+* `get_account`: Retrieve account details
+* `update_device_info`: Retrieve info and status for devices including account, baby, config and session
+* `get_session_for_account`: Retrieve session details for the account. Oddly, this is not linked to a device.
+* `get_configs_for_device`: Retrieve config details for the devices
+* `get_baby_for_account`: Retrieve baby details associated with the account
+* `get_session_stats_avg_for_account`: Retrieve aggregated session stats for the week
+* `get_session_stats_daily_for_account`: Retrieve aggregated session stats for the given date
+
+## Device Methods
+
+All of the routines on the `SnooDevice` class are coroutines and need to be
+`await`ed – see `example.py` for examples.
+
+* `update`: get the latest device info (state, etc.). Note that
+  this runs api.update_device_info and thus all accounts/devices will be updated
+
 ## API Properties
 
 * `account`: dictionary with the account
@@ -165,7 +190,6 @@ asyncio.get_event_loop().run_until_complete(main())
     "updatedByUserAt": "2020-02-12T01:12:12.123Z"
 }
 ```
-
 ## Device Properties
 
 * `account`: Return account associated with device
@@ -203,29 +227,125 @@ The device details from device properties
 }
 ```
 
-## API Methods
+## Session Stats Properties
+### Daily Session Aggregates
+#### Example
+```
+{
+    "levels": [
+        {
+            "sessionId": "1654751546",
+            "type": "asleep",
+            "startTime": "2021-01-31 08:00:00.000",
+            "stateDuration": 1279,
+            "isActive": false
+        },
+        {
+            "sessionId": "1681977280",
+            "type": "asleep",
+            "startTime": "2021-01-31 08:33:43.084",
+            "stateDuration": 63,
+            "isActive": false
+        },
+        ...
+    ],
+    "detailedLevels": [
+        {
+            "sessionId": "1654751546",
+            "level": "BASELINE",
+            "hold": false,
+            "settings": {
+                "responsivenessLevel": "lvl0",
+                "minimalLevelVolume": "lvl-1",
+                "soothingLevelVolume": "lvl0",
+                "minimalLevel": "baseline",
+                "motionLimiter": false,
+                "weaning": false,
+                "carRideMode": false
+            },
+            "isActive": false,
+            "levelDetails": {
+                "start": "2021-01-31 06:57:20.894",
+                "duration": 5038
+            },
+            "sessionDetails": {
+                "start": "2021-01-31 06:57:20.894",
+                "duration": 5038
+            },
+            "type": "asleep",
+            "startTime": "2021-01-31 08:00:00.000",
+            "stateDuration": 1279
+        },
+        ...
+    ],
+    "naps": 2,
+    "longestSleep": 10032,
+    "totalSleep": 18096,
+    "daySleep": 3434,
+    "nightSleep": 14662,
+    "nightWakings": 4,
+    "timezone": null
+}
+```
 
-These are coroutines and need to be `await`ed – see `example.py` for examples.
-
-* `login`: Login method that authenticates user and also updates device information
-* `authenticate`: Authenticate (or re-authenticate) to Snoo. Call this to
-  re-authenticate immediately after changing username and/or password otherwise
-  new username/password will only be used when token has to be refreshed.
-* `get_account`: Retrieve account details
-* `update_device_info`: Retrieve info and status for devices including account, baby, config and session
-* `get_session_for_account`: Retrieve session details for the account. Oddly, this is not linked to a device.
-* `get_configs_for_device`: Retrieve config details for the devices
-* `get_baby_for_account`: Retrieve baby details associated with the account
-* `get_session_stats_avg_for_account`: Retrieve aggregated session stats for the week
-* `get_session_stats_daily_for_account`: Retrieve aggregated session stats for the given date
-
-## Device Methods
-
-All of the routines on the `SnooDevice` class are coroutines and need to be
-`await`ed – see `example.py` for examples.
-
-* `update`: get the latest device info (state, etc.). Note that
-  this runs api.update_device_info and thus all accounts/devices will be updated
+### Weekly Session Aggregate
+#### Example
+```
+{
+    "totalSleepAVG": 18670,
+    "daySleepAVG": 3268,
+    "nightSleepAVG": 16802,
+    "longestSleepAVG": 9497,
+    "nightWakingsAVG": 6.286,
+    "days": {
+        "totalSleep": [
+            18096,
+            19966,
+            29070,
+            15408,
+            18880,
+            17171,
+            12096
+        ],
+        "daySleep": [
+            3434,
+            2012,
+            5463,
+            2161,
+            0,
+            0,
+            0
+        ],
+        "nightSleep": [
+            14662,
+            17954,
+            23607,
+            13247,
+            18880,
+            17171,
+            12096
+        ],
+        "longestSleep": [
+            10032,
+            10932,
+            11028,
+            9954,
+            8717,
+            8979,
+            6837
+        ],
+        "nightWakings": [
+            4,
+            7,
+            4,
+            7,
+            6,
+            7,
+            9
+        ]
+    }
+}
+```
 
 # Acknowledgement
 
