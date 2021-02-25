@@ -2,6 +2,7 @@
 import asyncio
 import logging
 from json import JSONDecodeError
+from typing import Tuple
 
 from aiohttp import ClientSession, ClientResponse
 from aiohttp.client_exceptions import ClientError, ClientResponseError
@@ -93,7 +94,7 @@ class SnooRequest:  # pylint: disable=too-many-instance-attributes
         data: dict = None,
         json: dict = None,
         allow_redirects: bool = False,
-    ) -> (ClientResponse, dict):
+    ) -> Tuple[ClientResponse, dict]:
 
         websession = websession or self._websession
 
@@ -130,7 +131,7 @@ class SnooRequest:  # pylint: disable=too-many-instance-attributes
         data: dict = None,
         json: dict = None,
         allow_redirects: bool = False,
-    ) -> (ClientResponse, None):
+    ) -> Tuple[ClientResponse, None]:
 
         websession = websession or self._websession
 

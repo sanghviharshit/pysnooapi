@@ -22,8 +22,8 @@ class SnooDevice:
         self._account = account  # type: str
         self._device = self.parse_dates_device(device_json)  # type: dict
         self._baby = baby_json  # type: dict
-        self._config = None
-        self._session = None
+        self._config = {}
+        self._session = {}
 
     @property
     def is_online(self) -> bool:
