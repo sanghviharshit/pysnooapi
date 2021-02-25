@@ -2,7 +2,7 @@
 
 BASE_ENDPOINT = "https://snoo-api.happiestbaby.com"
 LOGIN_URI = "/us/v2/login"
-REFRESH_URI = "us/v2/refresh"
+REFRESH_URI = "/us/v2/refresh"
 DEVICES_URI = "/me/devices"
 ACCOUNT_URI = "/us/me"
 BABY_URI = "/us/v3/me/baby"
