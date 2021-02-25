@@ -36,11 +36,10 @@ async def main() -> None:
             print(f"Account ID: {api.account.get('userId')}")
             print(f"Account Name: {api.account.get('givenName')}")
             print(f"Devices: {len(api.devices)}")
-            for device in api.devices:
-                # Get all devices listed with this account – note that you can use
-                # api.covers to only examine covers or api.lamps for only lamps.
+            if len(api.devices) != 0:
                 print("  ---------------")
-                if len(api.devices) != 0:
+            for device in api.devices:
+                # Get all devices listed with this account
                     print_info(device=api.devices[device])
                     print("  ------------------------------")
 
