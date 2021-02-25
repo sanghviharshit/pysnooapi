@@ -65,27 +65,159 @@ asyncio.get_event_loop().run_until_complete(main())
 
 ## Account Properties
 
-* `id`: ID for the account
-* `name`: Name of the account
+* `userId`: User ID for the account
+* `email`: Email for the account
+* `givenName`: Name for the account
+* `surname`: Last name for the account
+* `region`: Region for the account
+
+### Example
+```
+{
+    "email": "abc@xyz.com",
+    "givenName": "ABC",
+    "surname": "XYZ",
+    "userId": "afdgjfhdsgsg",
+    "region": "US"
+}
+```
+
+## Session Properties
+
+* `startTime`: datetime when the current or last session started
+* `endTime`: datetime when the last session ended or None if current session is active
+* `levels`: sequence of levels in current session sorted by time. (Last level is the latest)
+
+### Example
+```
+{
+    "startTime": "2021-02-01T01:02:34.456Z",
+    "endTime": "2021-02-01T04:02:34.456Z",
+    "levels": [
+        {
+            "level": "BASELINE"
+        },
+        {
+            "level": "LEVEL1"
+        },
+        {
+            "level": "BASELINE"
+        },
+        {
+            "level": "ONLINE"
+        }
+    ]
+}
+```
+## Config Properties
+### Example
+```
+{
+    "config": "lvl0",
+    "premieLock": false,
+    "weaning": false,
+    "whiteNoiseLevel": "lvl-1",
+    "motionLimiter": false,
+    "minimalLevel": "baseline",
+    "networkStatus": {
+        "lastPresence": "2021-01-01T11:02:35.160Z",
+        "lastProvisionSuccess": "2021-01-01T23:45:49.752Z",
+        "lastSSID": {
+            "name": "ABC",
+            "updatedAt": "2021-01-01T06:56:18.364Z"
+        },
+        "isOnline": true
+    }
+}
+```
+
+## Baby Properties
+
+### Example
+```
+{
+    "settings": {
+        "responsivenessLevel": "lvl0",
+        "minimalLevelVolume": "lvl-1",
+        "soothingLevelVolume": "lvl0",
+        "minimalLevel": "baseline",
+        "motionLimiter": false,
+        "weaning": false,
+        "carRideMode": true,
+        "offlineLock": false,
+        "daytimeStart": 8
+    },
+    "disabledLimiter": false,
+    "_id": "asfkhdsgfjsdkhkjdsg",
+    "pictures": [
+        {
+            "id": "sdfsdgkjhihr3r324_dsfh34tjh5kth5k",
+            "mime": "image/png",
+            "encoded": false,
+            "updatedAt": "2020-02-13T01:36:14.717Z"
+        }
+    ],
+    "createdAt": "2020-02-12T01:12:12.123Z",
+    "updatedAt": "2020-02-12T01:12:12.123Z",
+    "babyName": "Baby",
+    "birthDate": "2020-02-12T01:12:12.123Z",
+    "sex": "Female",
+    "updatedByUserAt": "2020-02-12T01:12:12.123Z"
+}
+```
 
 ## Device Properties
 
 * `account`: Return account associated with device
-* `device_id`: Return the device ID (serial number).
-* `firmware_version`: Return the family in which this device lives.
-* `name`: Return the device name.
-* `is_online`: Return whether the device is online.
-* `state`: Return the current state of the device.
-* `state_update`: Returns datetime when device was last updated
+* `device_id`: Return the device ID (serial number)
+* `device`: Return the device details
+* `firmware_version`: Return the family in which this device lives
+* `name`: Return the device name
+* `is_online`: Return whether the device is online
+* `is_on`: Return whether the device is on (in motion)
+* `state`: Return the current state of the device (ONLINE, WEANING_BASELINE, BASELINE, LEVEL1, LEVEL2, LEVEL3 and LEVEL4)
+* `baby`: Return the baby details
+* `session`: Return the session details
+* `config`: Return the config details
+* `last_update`: Returns datetime when the device was last updated
+
+### Device Details
+
+The device details from device properties
+
+#### Example
+```
+{
+    "serialNumber": "243545643656",
+    "createdAt": "2020-01-02T18:01:42.124Z",
+    "updatedAt": "2021-02-01T11:00:12.123Z",
+    "baby": "krgh2354543jhg6jh5gj",
+    "lastProvisionSuccess": "2020-12-01T01:45:49.752Z",
+    "firmwareUpdateDate": "2021-01-01T20:53:49.782Z",
+    "firmwareVersion": "v1.14.12",
+    "lastSSID": {
+        "name": "ABC",
+        "updatedAt": "2020-01-03T06:56:18.364Z"
+    },
+    "timezone": "America/Los_Angeles"
+}
+```
 
 ## API Methods
 
 These are coroutines and need to be `await`ed – see `example.py` for examples.
 
+* `login`: Login method that authenticates user and also updates device information
 * `authenticate`: Authenticate (or re-authenticate) to Snoo. Call this to
   re-authenticate immediately after changing username and/or password otherwise
   new username/password will only be used when token has to be refreshed.
-* `update_device_info`: Retrieve info and status for accounts and devices
+* `get_account`: Retrieve account details
+* `update_device_info`: Retrieve info and status for devices including account, baby, config and session
+* `get_session_for_account`: Retrieve session details for the account. Oddly, this is not linked to a device.
+* `get_configs_for_device`: Retrieve config details for the devices
+* `get_baby_for_account`: Retrieve baby details associated with the account
+* `get_session_stats_avg_for_account`: Retrieve aggregated session stats for the week
+* `get_session_stats_daily_for_account`: Retrieve aggregated session stats for the given date
 
 ## Device Methods
 
@@ -102,6 +234,6 @@ The structure of this project is inspired by [pymyq](https://github.com/arraylab
 # Disclaimer
 
 The code here is based off of an unsupported API from
-[happiesbaby.com](https://www.happiestbaby.com/) and is subject to change without
+[happiestbaby.com](https://www.happiestbaby.com/) and is subject to change without
 notice. The authors claim no responsibility for damages to your garage door or
 property by use of the code within.
