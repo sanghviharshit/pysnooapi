@@ -41,7 +41,7 @@ import asyncio
 
 from aiohttp import ClientSession
 
-import pysnoo
+import pysnooapi
 
 async def main() -> None:
     """Create the aiohttp session and run."""

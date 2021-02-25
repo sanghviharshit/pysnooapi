@@ -4,8 +4,8 @@ import logging
 
 from aiohttp import ClientSession
 
-import pysnoo
-from pysnoo.errors import SnooError
+import pysnooapi
+from pysnooapi.errors import SnooError
 
 _LOGGER = logging.getLogger()
 
