@@ -1,3 +1,4 @@
 -i https://pypi.python.org/simple
 aiohttp>=3.7
+ciso8601>=2.3.0
 pytz>=2021.1
